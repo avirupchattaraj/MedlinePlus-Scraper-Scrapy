@@ -10,6 +10,7 @@ class DrugsSpider(scrapy.Spider):
         browse = response.xpath(".//ul[@class='alpha-links']//li")
         for link in browse:
             value = link.xpath("./a/@href").get()
-            yield {
-                'value': value
-            }
+            yield response.follow(url=value, callback=self.parse_drugs)
+
+    def parse_drugs(self, response):
+        pass
