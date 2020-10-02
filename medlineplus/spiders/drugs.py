@@ -7,13 +7,13 @@ class DrugsSpider(scrapy.Spider):
     start_urls = ['https://medlineplus.gov/druginformation.html']
 
     def parse(self, response):
-        browse = response.xpath("//ul[@class='alpha-links']//li")
+        browse = response.xpath(".//ul[@class='alpha-links']//li")
         for link in browse:
             value = link.xpath("./a/@href").get()
             yield response.follow(url=value, callback=self.parse_drugs)
 
     def parse_drugs(self, response):
-        drugs = response.xpath("//ul[@id='index']//li")
+        drugs = response.xpath(".//ul[@id='index']//li")
         for drug in drugs:
             name = drug.xpath("./span/text()").get()
             drug_link = drug.xpath("./a/@href").get()
@@ -21,20 +21,21 @@ class DrugsSpider(scrapy.Spider):
 
     def drug_info(self, response):
         drug_name = response.request.meta['drug_name']
-        info_1 = response.xpath("//div[@class='section-body']/p/text()").get()
-        info_2 = response.xpath("//div[@id='how']//p/text()").getall()
-        info_3 = response.xpath("//div[@id='other-uses']//p/text()").getall()
-        info_4 = response.xpath("//div[@id='precautions']//li/text()").getall()
+        info_1 = response.xpath(".//div[@id='why']//p/text()").get()
+        info_2 = response.xpath(".//div[@id='how']//p/text()").getall()
+        info_3 = response.xpath(".//div[@id='other-uses']//p/text()").getall()
+        info_4 = response.xpath(
+            ".//div[@id='precautions']//li/text()").getall()
         info_5 = response.xpath(
-            "//div[@id='special-dietary']//p/text()").getall()
-        info_6 = response.xpath("//div[@id='if-i-forget']//p/text()").getall()
+            ".//div[@id='special-dietary']//p/text()").getall()
+        info_6 = response.xpath(".//div[@id='if-i-forget']//p/text()").getall()
         info_7 = response.xpath(
-            "//div[@id='side-effects']//li/text()").getall()
+            ".//div[@id='side-effects']//li/text()").getall()
         info_8 = response.xpath(
-            "//div[@id='storage-conditions']//p/text()").getall()
-        info_9 = response.xpath("//div[@id='overdose']//p/text()").getall()
+            ".//div[@id='storage-conditions']//p/text()").getall()
+        info_9 = response.xpath(".//div[@id='overdose']//p/text()").getall()
         info_10 = response.xpath(
-            "//div[@id='other-information']//p/text()").getall()
+            ".//div[@id='other-information']//p/text()").getall()
 
         yield {
             'Drug Name': drug_name,
